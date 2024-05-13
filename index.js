@@ -65,6 +65,19 @@ async function run() {
       res.send(userPosts);
     });
 
+    // add and update post apis below
+    app.post("/addPost", async (req, res) => {
+      const data = req.body;
+
+      const doc = {
+        ...data,
+      };
+
+      const result = await allPost.insertOne(doc);
+
+      res.send(result);
+    });
+
     // reviews related api below
     app.get("/reviews", async (req, res) => {
       const allReviews = reviews.find();
