@@ -33,7 +33,9 @@ async function run() {
     await client.connect();
     const database = client.db("HelpConnect");
     const allPost = database.collection("needVolunteer");
+    const reviews = database.collection("reviews");
 
+    // post related apis below
     app.get("/posts", async (req, res) => {
       const allVolunteerPost = allPost.find();
       const result = await allVolunteerPost.toArray();
@@ -47,6 +49,14 @@ async function run() {
       const query = { _id: new ObjectId(id) };
 
       const result = await allPost.findOne(query);
+      res.send(result);
+    });
+
+    // reviews related api below
+    app.get("/reviews", async (req, res) => {
+      const allReviews = reviews.find();
+      const result = await allReviews.toArray();
+
       res.send(result);
     });
 
