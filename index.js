@@ -69,12 +69,41 @@ async function run() {
     app.post("/addPost", async (req, res) => {
       const data = req.body;
 
-      const doc = {
+      const post = {
         ...data,
       };
 
-      const result = await allPost.insertOne(doc);
+      const result = await allPost.insertOne(post);
+      res.send(result);
+    });
 
+    app.put("/updatePost/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+
+      // filter existing data
+      const filter = { _id: new ObjectId(id) };
+
+      // if no existing data found then add new one
+      const options = { upsert: true };
+
+      // update post
+      const updatePost = {
+        $set: {
+          ...data,
+        },
+      };
+
+      const result = await allPost.updateOne(filter, updatePost, options);
+      res.send(result);
+    });
+
+    // delete post related apis below
+    app.delete("/post/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await allPost.deleteOne(query);
       res.send(result);
     });
 
