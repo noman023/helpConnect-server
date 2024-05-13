@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 const app = express();
@@ -31,9 +31,23 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const database = client.db("HelpConnect");
+    const allPost = database.collection("needVolunteer");
 
-    app.get("/", (req, res) => {
-      res.send("yeah");
+    app.get("/posts", async (req, res) => {
+      const allVolunteerPost = allPost.find();
+      const result = await allVolunteerPost.toArray();
+
+      res.send(result);
+    });
+
+    app.get("/post/:id", async (req, res) => {
+      const id = req.params.id;
+      //   match id with _id of data
+      const query = { _id: new ObjectId(id) };
+
+      const result = await allPost.findOne(query);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
@@ -43,7 +57,7 @@ async function run() {
     );
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
