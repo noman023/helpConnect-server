@@ -52,6 +52,19 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/myPosts", async (req, res) => {
+      const email = req.query.email;
+
+      let query;
+      // if email is in the query use this for query in database
+      if (req.query?.email) {
+        query = { "organizer.email": email };
+      }
+
+      const userPosts = await allPost.find(query).toArray();
+      res.send(userPosts);
+    });
+
     // reviews related api below
     app.get("/reviews", async (req, res) => {
       const allReviews = reviews.find();
