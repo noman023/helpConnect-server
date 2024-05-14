@@ -38,7 +38,7 @@ async function run() {
 
     // post related apis below
     app.get("/posts", async (req, res) => {
-      const allVolunteerPost = allPost.find();
+      const allVolunteerPost = allPost.find().sort({ deadline: 1 });
       const result = await allVolunteerPost.toArray();
 
       res.send(result);
