@@ -34,6 +34,7 @@ async function run() {
     const database = client.db("HelpConnect");
     const allPost = database.collection("needVolunteer");
     const reviews = database.collection("reviews");
+    const volunteerRequests = database.collection("volunteerRequests");
 
     // post related apis below
     app.get("/posts", async (req, res) => {
@@ -105,6 +106,31 @@ async function run() {
 
       const result = await allPost.deleteOne(query);
       res.send(result);
+    });
+
+    // be volunteer related apis below
+    app.post("/beVolunteer", async (req, res) => {
+      const data = req.body;
+
+      const beVolunteerPost = {
+        ...data,
+      };
+
+      const result = await volunteerRequests.insertOne(beVolunteerPost);
+      res.send(result);
+    });
+
+    app.patch("/beVolunteer/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      await allPost.findOneAndUpdate(
+        query,
+        { $inc: { volunteersNeeded: -1 } }, // Decrement volunteersNeeded by 1
+        { returnOriginal: false } // Return the updated document
+      );
+
+      res.send({ title: "success" });
     });
 
     // reviews related api below
