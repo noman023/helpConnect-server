@@ -133,6 +133,22 @@ async function run() {
       res.send({ title: "success" });
     });
 
+    app.get("/myRequests", async (req, res) => {
+      const email = req.query.email;
+      let query;
+
+      // if email is in the query use this for query in database
+      if (req.query?.email) {
+        query = { volunteerEmail: email };
+      }
+
+      const volunteerRequestPosts = await volunteerRequests
+        .find(query)
+        .toArray();
+
+      res.send(volunteerRequestPosts);
+    });
+
     // reviews related api below
     app.get("/reviews", async (req, res) => {
       const allReviews = reviews.find();
