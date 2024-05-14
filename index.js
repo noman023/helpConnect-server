@@ -99,7 +99,6 @@ async function run() {
       res.send(result);
     });
 
-    // delete post related apis below
     app.delete("/post/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -147,6 +146,15 @@ async function run() {
         .toArray();
 
       res.send(volunteerRequestPosts);
+    });
+
+    app.delete("/myRequests/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+
+      const result = await volunteerRequests.deleteOne(query);
+
+      res.send(result);
     });
 
     // reviews related api below
